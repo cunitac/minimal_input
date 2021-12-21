@@ -83,15 +83,15 @@ pub mod minimal_input {
 
     pub mod marker {
         macro_rules! impl_readable {
-        ($e:ty, $t:ty, $u:ty, $f:expr) => {
-            impl $crate::minimal_input::Readable for $e {
-                type Output = $t;
-                fn read(mut source: &mut $crate::minimal_input::Source) -> $t {
-                    $f($crate::read!(@source, $u))
+            ($e:ty, $t:ty, $u:ty, $f:expr) => {
+                impl $crate::minimal_input::Readable for $e {
+                    type Output = $t;
+                    fn read(mut source: &mut $crate::minimal_input::Source) -> $t {
+                        $f($crate::read!(@source, $u))
+                    }
                 }
             }
         }
-    }
         pub enum Usize1 {}
         pub enum Isize1 {}
         pub enum Chars {}
