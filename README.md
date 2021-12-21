@@ -2,7 +2,9 @@
 
 [proconio](https://docs.rs/proconio) が使えない競技プログラミング等で使う、Rust で標準入力をパースするライブラリである。
 
-基本的な使い方は proconio と全く同じである。相違点を列挙しておくが、他にも細かい違いがあるかもしれない。
+src/lib.rs 全体をそのままソースコードのどこかに貼り付け、必要であれば `use minimal_input::marker::Usize1` などを書けば、proconio と同様に使うことができる。
+
+相違点を列挙しておくが、他にも細かい違いがあるかもしれない。
 
 - proconio では lazy_static を使っているが、minimal_input では thread_local を使っており、標準ライブラリへの依存がない
 - proconio では Stdin 以外からも入力を受け取ることができるが、minimal_input では Stdin のみで、たとえば StdinLock も不可
