@@ -2,7 +2,7 @@
 
 [proconio](https://docs.rs/proconio) が使えない競技プログラミング等で使う、Rust で標準入力をパースするライブラリである。
 
-src/lib.rs 全体をそのままソースコードのどこかに貼り付け、必要であれば `use minimal_input::marker::Usize1` などを書けば、proconio と同様に使うことができる。
+src/lib.rs 全体をそのままソースコードのどこかに貼り付け、必要であれば `use minimal_input::marker::Usize1;` などを書けば、proconio と同様に使うことができる。
 
 相違点を列挙しておくが、他にも細かい違いがあるかもしれない。
 
