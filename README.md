@@ -14,12 +14,12 @@
 - proconio では行単位で入力を受け取る（LineSource）か一気に入力を受け取る（OnceSource）か選ぶことができるが、minimal_input では行単位で固定である
   - 一気に入力したい場合は、[23行目](src/lib.rs#L23) の `read_line` を `read_to_string` に書き換える
 - minimal_input の実装はかなり短い（約100行）
-- minimal_input には `read!` マクロが存在する
+- minimal_input には read マクロが存在する
   - `read!(u32, [i32])` は `{ input!(x: (u32, [i32])); x }` と等価
   - `read!(@source, u32)` は proconio の `{ input!(from source, x: u32); x }` に相当
 - Source の実装が異なり、そのため Readable の実装方法が異なる
   - Source が実装するメソッドは next_token のみであり、これは proconio::source:Source の next_token_unwrap に相当する
-  - 前述のように `from source` が存在しないため、代わりに `read!` マクロを用いる
+  - 前述のように `from source` が存在しないため、代わりに read マクロを用いる
 - fastout は存在しない
 
 ## ライセンス
