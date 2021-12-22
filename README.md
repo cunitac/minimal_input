@@ -11,7 +11,7 @@
 - proconio では lazy_static を使っているが、minimal_input では thread_local を使っており、標準ライブラリ以外への依存がない
   - つまり、スレッド安全でない
 - proconio では `from source` として入力を指定することができるが、minimal_input ではできない（できるようにすることも検討している） 
-- proconio では行単位で入力を受け取る（LineSource）か一気に入力を受け取る（LineSource）か選ぶことができるが、minimal_input では行単位で固定である
+- proconio では行単位で入力を受け取る（LineSource）か一気に入力を受け取る（OnceSource）か選ぶことができるが、minimal_input では行単位で固定である
   - 一気に入力したい場合は、[23行目](src/lib.rs#L23) の `read_line` を `read_to_string` に書き換える
 - minimal_input の実装はかなり短い（約100行）
 - minimal_input には `read!` マクロが存在する
