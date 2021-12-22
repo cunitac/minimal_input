@@ -57,7 +57,7 @@ pub mod minimal_input {
     macro_rules! input {
         () => {};
         ($x:tt: $t:tt, $($r:tt)*) => {
-            let $x = read_value!($t);
+            let $x = $crate::read_value!($t);
             $crate::input!($($r)*);
         };
         (mut $x:tt: $t:tt, $($r:tt)*) => {
@@ -65,7 +65,7 @@ pub mod minimal_input {
             $crate::input!($($r)*);
         };
         (from $s:expr, $x:tt: $t:tt, $($r:tt)*) => {
-            let $x = read_value!(from $s, $t);
+            let $x = $crate::read_value!(from $s, $t);
             $crate::input!(from $s, $($r)*);
         };
         (from $s:expr, mut $x:tt: $t:tt, $($r:tt)*) => {
