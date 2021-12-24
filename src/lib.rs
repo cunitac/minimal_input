@@ -4,7 +4,6 @@ pub mod minimal_input {
     use std::io::{stdin, BufRead, BufReader, Stdin};
     use std::str::{FromStr, SplitWhitespace};
     thread_local!(
-        #[doc(hidden)]
         pub static STDIN_SOURCE: RefCell<Source> = RefCell::new(Source {
             stdin: BufReader::new(stdin()),
             tokens: "".split_whitespace(),
@@ -27,7 +26,6 @@ pub mod minimal_input {
             self.next_token().unwrap()
         }
     }
-    #[doc(hidden)]
     #[macro_export]
     macro_rules! read_value {
         (from $s:expr, [$t:tt; $n:expr]) => {
