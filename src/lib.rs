@@ -45,7 +45,7 @@ pub mod minimal_input {
             ($($crate::read_value!(from $s, $t)),*)
         };
         ($($r:tt)*) => {
-            $crate::minimal_input::STDIN.with(|s| {
+            $crate::minimal_input::STDIN_SOURCE.with(|s| {
                 let mut s = s.borrow_mut();
                 $crate::read_value!(from s, $($r)*)
             })
