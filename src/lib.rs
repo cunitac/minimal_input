@@ -3,19 +3,16 @@ pub mod minimal_input {
     use std::fmt::Debug;
     use std::io::{stdin, BufRead, BufReader, Stdin};
     use std::str::{FromStr, SplitWhitespace};
-
     thread_local!(
         pub static STDIN: RefCell<Source> = RefCell::new(Source {
             stdin: BufReader::new(stdin()),
             tokens: "".split_whitespace(),
         });
     );
-
     pub struct Source {
         stdin: BufReader<Stdin>,
         tokens: SplitWhitespace<'static>,
     }
-
     impl Source {
         pub fn next_token(&mut self) -> &str {
             self.tokens.next().unwrap_or_else(|| {
@@ -26,7 +23,6 @@ pub mod minimal_input {
             })
         }
     }
-
     #[macro_export]
     macro_rules! read {
         (@$s:expr, [$t:tt; $n:expr]) => {
@@ -52,7 +48,6 @@ pub mod minimal_input {
             })
         }
     }
-
     #[macro_export]
     macro_rules! input {
         () => {};
@@ -68,19 +63,16 @@ pub mod minimal_input {
             $crate::input!($($r)*,);
         };
     }
-
     pub trait Readable {
         type Output;
         fn read(source: &mut Source) -> Self::Output;
     }
-
     impl<T: FromStr<Err = E>, E: Debug> Readable for T {
         type Output = T;
         fn read(source: &mut Source) -> T {
             source.next_token().parse().unwrap()
         }
     }
-
     pub mod marker {
         macro_rules! impl_readable {
             ($e:ty, $t:ty, $u:ty, $f:expr) => {
