@@ -4,7 +4,7 @@ pub mod minimal_input {
     use std::io::{stdin, BufRead, BufReader, Stdin};
     use std::str::{FromStr, SplitWhitespace};
     thread_local!(
-        pub static STDIN: RefCell<Source> = RefCell::new(Source {
+        pub static STDIN_SOURCE: RefCell<Source> = RefCell::new(Source {
             stdin: BufReader::new(stdin()),
             tokens: "".split_whitespace(),
         });
@@ -14,37 +14,40 @@ pub mod minimal_input {
         tokens: SplitWhitespace<'static>,
     }
     impl Source {
-        pub fn next_token(&mut self) -> &str {
-            self.tokens.next().unwrap_or_else(|| {
+        pub fn next_token(&mut self) -> Option<&str> {
+            self.tokens.next().or_else(|| {
                 let mut input = String::new();
                 self.stdin.read_line(&mut input).unwrap();
                 self.tokens = Box::leak(input.into_boxed_str()).split_whitespace();
-                self.tokens.next().unwrap()
+                self.tokens.next()
             })
+        }
+        pub fn next_token_unwrap(&mut self) -> &str {
+            self.next_token().unwrap()
         }
     }
     #[macro_export]
-    macro_rules! read {
-        (@$s:expr, [$t:tt; $n:expr]) => {
-            (0..$n).map(|_| $crate::read!(@$s, $t)).collect::<::std::vec::Vec<_>>()
+    macro_rules! read_value {
+        (from $s:expr, [$t:tt; $n:expr]) => {
+            (0..$n).map(|_| $crate::read_value!(from $s, $t)).collect::<::std::vec::Vec<_>>()
         };
-        (@$s:expr, [$t:tt]) => {{
-            let n = $crate::read!(@$s, usize);
-            $crate::read!(@$s, [$t; n])
+        (from $s:expr, [$t:tt]) => {{
+            let n = $crate::read_value!(from $s, usize);
+            $crate::read_value!(from $s, [$t; n])
         }};
-        (@$s:expr, ($($t:tt),* $(,)?)) => {
-            $crate::read!(@$s, $($t),*)
+        (from $s:expr, ($($t:tt),* $(,)?)) => {
+            $crate::read_value!(from $s, $($t),*)
         };
-        (@$s:expr, $t:ty) => {
+        (from $s:expr, $t:ty) => {
             <$t as $crate::minimal_input::Readable>::read(&mut $s)
         };
-        (@$s:expr, $($t:tt),* $(,)?) => {
-            ($($crate::read!(@$s, $t)),*)
+        (from $s:expr, $($t:tt),* $(,)?) => {
+            ($($crate::read_value!(from $s, $t)),*)
         };
         ($($r:tt)*) => {
             $crate::minimal_input::STDIN.with(|s| {
                 let mut s = s.borrow_mut();
-                $crate::read!(@s, $($r)*)
+                $crate::read_value!(from s, $($r)*)
             })
         }
     }
@@ -52,12 +55,20 @@ pub mod minimal_input {
     macro_rules! input {
         () => {};
         ($x:tt: $t:tt, $($r:tt)*) => {
-            let $x = read!($t);
+            let $x = $crate::read_value!($t);
             $crate::input!($($r)*);
         };
         (mut $x:tt: $t:tt, $($r:tt)*) => {
-            let mut $x = $crate::read!($t);
+            let mut $x = $crate::read_value!($t);
             $crate::input!($($r)*);
+        };
+        (from $s:expr, $x:tt: $t:tt, $($r:tt)*) => {
+            let $x = $crate::read_value!(from $s, $t);
+            $crate::input!(from $s, $($r)*);
+        };
+        (from $s:expr, mut $x:tt: $t:tt, $($r:tt)*) => {
+            let mut $x = $crate::read_value!(from $s, $t);
+            $crate::input!(from $s, $($r)*);
         };
         ($($r:tt)*) => {
             $crate::input!($($r)*,);
@@ -70,7 +81,7 @@ pub mod minimal_input {
     impl<T: FromStr<Err = E>, E: Debug> Readable for T {
         type Output = T;
         fn read(source: &mut Source) -> T {
-            source.next_token().parse().unwrap()
+            source.next_token_unwrap().parse().unwrap()
         }
     }
     pub mod marker {
@@ -79,7 +90,7 @@ pub mod minimal_input {
                 impl $crate::minimal_input::Readable for $e {
                     type Output = $t;
                     fn read(mut source: &mut $crate::minimal_input::Source) -> $t {
-                        $f($crate::read!(@source, $u))
+                        $f($crate::read_value!(from source, $u))
                     }
                 }
             }
